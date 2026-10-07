@@ -1,0 +1,7 @@
+{
+  "name": "SG Weather & PSI Monitor",
+  "description": "Real-time Singapore PSI, air temperature, and rainfall monitor with live weather effects, station locator, and API health status.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
