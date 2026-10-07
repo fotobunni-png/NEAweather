@@ -34,3 +34,11 @@ This document records the sequence of prompts provided during the development of
 
 ### Prompt 5
 > create a prompt.md containing all my prompts located at project main
+
+---
+
+### Prompt 6
+> 1) make haze effects more obvious
+> 2) Add Singapore map
+> 3) SG Weather Companion
+

@@ -33,6 +33,8 @@ import {
   findNearestStation,
   getClosestRegion,
 } from './utils/geo';
+import { SingaporeMap } from './components/SingaporeMap';
+import { SgWeatherCompanion } from './components/SgWeatherCompanion';
 import { Navbar } from './components/Navbar';
 import { WeatherEffects } from './components/WeatherEffects';
 import { LocationSelector } from './components/LocationSelector';
@@ -274,7 +276,20 @@ export default function App() {
               rainStations={rainfallData?.stations || []}
             />
 
-            {/* 2. Hero Weather & PSI Card for Selected Location */}
+            {/* 2. SG Weather Companion Mascot & Lifestyle Tips */}
+            <SgWeatherCompanion
+              currentTemp={
+                temperatureData?.readings.find(
+                  (r) => r.stationId === currentLocation.nearestTempStation?.id
+                )?.value ?? 32
+              }
+              rainfallMm={liveRainfallMm}
+              psiValue={livePsiValue}
+              regionName={currentLocation.name}
+              weatherMode={effectMode}
+            />
+
+            {/* 3. Hero Weather & PSI Card for Selected Location */}
             <HeroWeatherCard
               currentLocation={currentLocation}
               temperatureData={temperatureData}
@@ -287,7 +302,16 @@ export default function App() {
               onOpenStations={() => setIsStationsModalOpen(true)}
             />
 
-            {/* 3. Island-Wide 5-Regions PSI Comparison */}
+            {/* 4. Interactive Singapore Weather & PSI Map */}
+            <SingaporeMap
+              currentLocation={currentLocation}
+              onSelectLocation={setCurrentLocation}
+              tempData={temperatureData}
+              rainData={rainfallData}
+              psiData={psiData}
+            />
+
+            {/* 5. Island-Wide 5-Regions PSI Comparison */}
             <PsiRegionsGrid
               psiData={psiData}
               activeRegion={currentLocation.region}
