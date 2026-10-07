@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import healthHandler, { getHealthStatus } from './api/health.js';
+import apiRouter from './api/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,42 +12,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 app.use(express.json());
 
-// API Health Check routes (Requirement #2: /api/health.js and /api/health)
-app.get(['/api/health', '/api/health.js'], async (req, res) => {
-  try {
-    await healthHandler(req, res);
-  } catch (error) {
-    console.error('Error in /api/health:', error);
-    res.status(500).json({
-      status: 'DOWN',
-      error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString(),
-    });
-  }
-});
-
-// Proxy route for Singapore Weather Data (optional fallback if client needs proxy)
-app.get('/api/weather/all', async (_req, res) => {
-  try {
-    const [tempRes, rainRes, psiRes] = await Promise.all([
-      fetch('https://api-open.data.gov.sg/v2/real-time/api/air-temperature').then(r => r.json()),
-      fetch('https://api-open.data.gov.sg/v2/real-time/api/rainfall').then(r => r.json()),
-      fetch('https://api-open.data.gov.sg/v2/real-time/api/psi').then(r => r.json()),
-    ]);
-
-    res.json({
-      temperature: tempRes,
-      rainfall: rainRes,
-      psi: psiRes,
-      fetchedAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    res.status(502).json({
-      error: 'Failed to fetch NEA real-time data',
-      details: error instanceof Error ? error.message : String(error),
-    });
-  }
-});
+// Mount all API endpoints from /api folder
+app.use('/api', apiRouter);
 
 async function startServer() {
   if (!isProduction) {
